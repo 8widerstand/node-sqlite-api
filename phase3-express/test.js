@@ -45,7 +45,7 @@ app.get('/stats', (request, response) => {
     const stats = {
         totalProducts: products.length,
         totalPrice:totalValue ,
-        averagePrice: (totalValue/products.length).toFixed(2),
+        averagePrice: parseFloat((totalValue / products.length).toFixed(2)),
     }
     response.send(stats);
 });
