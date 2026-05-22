@@ -15,6 +15,11 @@ app.get('/books', (req, res) => {
     res.json(books);
 });
 
+app.get('/books/available/list', (req, res) => {
+    const availableBooks = books.filter(book => book.available === true);
+    res.json(availableBooks);
+});
+
 app.get('/books/:id', (req, res) => {
     const id = parseInt(req.params.id);
 
@@ -38,8 +43,8 @@ app.post('/books', (req, res) => {
         return res.status(400).json({error: "'The field 'title', 'author' and 'year' are required"});
     }
 
-    if (typeof year !== "number" || year < 0) {
-        return res.status(400).json({error: "the year must be a positive number",});
+    if ((typeof year !== "number" || year < 0)) {
+        return res.status(400).json({ error: "the field 'year' must be a positive number" });
     }
 
     const newBook = {
@@ -52,7 +57,7 @@ app.post('/books', (req, res) => {
 
     books.push(newBook);
     nextIndex++;
-    res.send(201).json(books);
+    res.status(201).json(newBook);
 });
 
 app.put('/books/:id', (req, res) => {
@@ -79,14 +84,14 @@ app.put('/books/:id', (req, res) => {
     }
 
     books[bookIndex] = {
-        id: nextIndex,
+        id: id,
         title: title,
         author: author,
         year: year,
         available: available !== undefined ? available : true,
     };
 
-    res.json(books);
+    res.json(books[bookIndex]);
 });
 
 app.delete('/books/:id', (req, res) => {
@@ -102,7 +107,7 @@ app.delete('/books/:id', (req, res) => {
     }
 
     books.splice(index, 1);
-    res.send(204).send();
+    res.status(204).send();
 })
 
 app.listen(PORT, () => {
