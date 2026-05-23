@@ -9,7 +9,7 @@ const books = [
     {id: 3, title: "Orgueil et Préjugés", author: "Jane Austen", year: 1813, available: true},
     {id: 4, title: "L'Étranger", author: "Albert Camus", year: 1942, available: false}
 ];
-let nextIndex = 4;
+let nextIndex = 5;
 
 app.get('/books', (req, res) => {
     res.json(books);
@@ -36,11 +36,12 @@ app.get('/books/:id', (req, res) => {
     res.json(book);
 });
 
+// POST /books ->  create a book
 app.post('/books', (req, res) => {
     const {title, author, year, available} = req.body;
 
-    if (!title || !author || year === undefined) {
-        return res.status(400).json({error: "'The field 'title', 'author' and 'year' are required"});
+    if (!title || !author) {
+        return res.status(400).json({error: "'The field 'title' and 'author' are required"});
     }
 
     if ((typeof year !== "number" || year < 0)) {
@@ -60,6 +61,7 @@ app.post('/books', (req, res) => {
     res.status(201).json(newBook);
 });
 
+// PUT /books/:id → replace a book
 app.put('/books/:id', (req, res) => {
     const id = parseInt(req.params.id);
 
@@ -75,8 +77,8 @@ app.put('/books/:id', (req, res) => {
 
     const {title, author, year, available} = req.body;
 
-    if (!title || !author || year === undefined) {
-        return res.status(400).json({error: "'The field 'title', 'author' and 'year' are required"});
+    if (!title || !author) {
+        return res.status(400).json({error: "'The field 'title' and 'author' are required"});
     }
 
     if (typeof year !== "number" || year < 0) {
@@ -94,8 +96,10 @@ app.put('/books/:id', (req, res) => {
     res.json(books[bookIndex]);
 });
 
+// DELETE /books/:id → delete a book
 app.delete('/books/:id', (req, res) => {
     const id = parseInt(req.params.id);
+
     if (isNaN(id)) {
         return res.status(400).json({error: 'the id must be number'});
     }
@@ -113,10 +117,10 @@ app.delete('/books/:id', (req, res) => {
 app.listen(PORT, () => {
     console.log(`  Serveur started on http://localhost:${PORT}`);
     console.log("  Routes CRUD disponibles :");
-    console.log("  GET    /books      → lister");
-    console.log("  GET    /books/:id  → lire un");
-    console.log("  POST   /books      → créer");
-    console.log("  PUT    /books/:id  → modifier");
-    console.log("  DELETE /books/:id  → supprimer");
+    console.log("  GET    /books      → list");
+    console.log("  GET    /books/:id  → Read one");
+    console.log("  POST   /books      → create");
+    console.log("  PUT    /books/:id  → modify");
+    console.log("  DELETE /books/:id  → delete");
 });
 
