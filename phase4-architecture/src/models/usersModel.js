@@ -2,7 +2,7 @@ const users = [
     {id: 1, name: "Alice Dupont", email: "alice@email.com", age: 25},
     {id: 2, name: "Bob Martin", email: "bob@email.com", age: 18},
     {id: 3, name: "Charlie Leroy", email: "charlie@email.com", age: 29},
-    {id: 4, name: "Diana Lefevre", email: "diana@email.com", age: 35},
+    {id: 4, name: "Diana Lefevre", email: "diana@email.com", age: 145},
     {id: 5, name: "Eve Moreau", email: "eve@email.com", age: 26}
 ];
 let nextIndex = 6;
@@ -18,7 +18,7 @@ const findOne = (userId) => {
 
 //get adult users
 const findAdultUsers = () => {
-    return users.map(user => user.age >= 18);
+    return users.filter(user => user.age >= 18);
 }
 
 // create a user
@@ -35,7 +35,7 @@ const createUser = (body) => {
 
 //update a user
 const updateUser = (userData) => {
-    const index = users.findIndex((user) => user.id === userId);
+    const index = users.findIndex((user) => user.id === userData.id);
     if (index === -1) return null;
 
     return users[index] = {

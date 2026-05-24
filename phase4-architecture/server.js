@@ -14,11 +14,12 @@ app.use(express.json());
 
 // import all routes
 const booksRoutes = require("./src/routes/booksRoutes");
+const usersRoutes = require("./src/routes/usersRoutes");
 
 // the books routes are “mapped” to the /books prefix.
 // All routes defined in booksRoutes will be accessible under /books.
 app.use("/books", booksRoutes);
-
+app.use("/users", usersRoutes);
 // Starting the server
 const PORT = 3000;
 app.listen(PORT, () => {

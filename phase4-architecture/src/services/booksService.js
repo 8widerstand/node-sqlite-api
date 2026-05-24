@@ -59,6 +59,7 @@ const updateBook = (id,bookData) => {
 
     verifyBook(title, author, year);
     const updatedBook = {
+        id: existing.id,
         title,
         author,
         year,
@@ -70,7 +71,7 @@ const updateBook = (id,bookData) => {
 
 // delete a book
 const deleteBook = (id) => {
-    const success = booksModel.remove(id);
+    const success = booksModel.deleteBook(id);
     if (!success) {
         const error = new Error("Book not found");
         error.statusCode = 404;
@@ -79,7 +80,7 @@ const deleteBook = (id) => {
 };
 
 function verifyBook(title, author, year) {
-    if (isNaN(year) || year !== undefined && year || 0) {
+    if (isNaN(year) || year === undefined && year || 0) {
         const error = new Error("The field 'year' must be a positive number");
         error.status = 400;
         throw error;
