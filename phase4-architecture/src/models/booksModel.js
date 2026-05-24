@@ -30,9 +30,10 @@ const findAvailable = () => {
 //create a new book and return them
 const createBook = (bookData) => {
     const newBook = {
-        ...bookData,
         id: nextId,
+        ...bookData,
     };
+    books.push(newBook);
     nextId++;
     return newBook;
 };
@@ -41,7 +42,6 @@ const createBook = (bookData) => {
 const updateBook = (bookData) => {
     const index = books.findIndex(book => book.id === bookData.id);
     if (index === -1) return null;
-
 
     books[index] = {
         id: index,
