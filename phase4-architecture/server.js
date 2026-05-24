@@ -15,7 +15,7 @@ app.use(express.json());
 // import all routes
 const booksRoutes = require("./src/routes/booksRoutes");
 
-// We “map” the books routes to the /books prefix.
+// the books routes are “mapped” to the /books prefix.
 // All routes defined in booksRoutes will be accessible under /books.
 app.use("/books", booksRoutes);
 
