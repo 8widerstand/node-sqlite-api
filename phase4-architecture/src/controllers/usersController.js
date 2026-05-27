@@ -21,9 +21,6 @@ const getAdultUsers = (req, res) => {
 const getUserById = (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            res.status(400).json({error: "Id must be a number"});
-        }
         const user = userService.getUserById(id);
         res.json(user);
     } catch (error) {
@@ -34,9 +31,6 @@ const getUserById = (req, res) => {
 const updateUser = (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            res.status(400).json({error: "Id must be a number"});
-        }
         const userData = req.body;
         const updatedUser = userService.updateUser(id, userData);
         res.status(201).json(updatedUser);
@@ -58,9 +52,6 @@ const createUser = (req, res) => {
 const deleteUser = (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            res.status(400).json({error: "Id must be a number"});
-        }
         userService.deleteUser(id);
         res.status(204).send();
     } catch (error) {
