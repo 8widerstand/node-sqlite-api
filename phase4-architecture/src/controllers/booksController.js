@@ -7,77 +7,70 @@
 // ==========================================
 
 const booksService = require('../services/booksService');
+// The third parameter, ‘next’, allows the error to be passed to the errorHandler.
 
 //GET /books
-const getAllBooks = (req, res) => {
+const getAllBooks = (req, res, next) => {
     try {
         const books = booksService.getAllBooks();
         res.json(books);
     } catch (error) {
-        res.status(error.statusCode || 500).json({error: error.message});
+        next(error);
     }
 };
 
 //GET /books/:id
-const getBookById = (req, res) => {
-    const bookId = parseInt(req.params.id);
+const getBookById = (req, res, next) => {
     try {
-        if (isNaN(bookId)) {
-            res.status(400).json({error: 'The id must be a number'});
-        }
-        const book = booksService.getBookById(bookId);
+        const id = parseInt(req.params.id);
+        const book = booksService.getBookById(id);
         res.json(book);
     } catch (error) {
-        res.status(error.statusCode || 500).json({error: error.message});
+        next(error);
     }
 };
+
 // GET /books/available
-const getAvailableBooks = (req, res) => {
+const getAvailableBooks = (req, res, next) => {
     try {
         const availableBooks = booksService.getAvailableBooks();
         res.json(availableBooks);
     } catch (error) {
-        res.status(error.statusCode || 500).json({error: error.message});
+      next(error);
     }
 }
 
 // POST /books
-const createBook = (req, res) => {
+const createBook = (req, res, next) => {
     try {
         const bookData = req.body;
         const book = booksService.createBook(bookData);
         res.status(201).json(book);
-    }catch(error) {
-        res.status(error.statusCode || 500).json({error: error.message});
+    } catch (error) {
+        next(error);
     }
 }
 
 // POST  /books/:id
-const updateBook = (req, res) => {
+const updateBook = (req, res, next) => {
     try {
         const bookId = parseInt(req.params.id);
         const bookData = req.body;
-        if (isNaN(bookId)) {
-            res.status(400).json({error: 'The id must be a number'});
-        }
         const book = booksService.updateBook(bookId, bookData);
         res.status(201).json(book);
-    }catch(error) {
-        res.status(error.statusCode || 500).json({error: error.message});
+    } catch (error) {
+       next(error);
     }
 }
 
 // Delete  /books/:id
-const deleteBook = (req, res) => {
+const deleteBook = (req, res, next) => {
     try {
         const bookId = parseInt(req.params.id);
-        if (isNaN(bookId)) {
-            res.status(400).json({error: 'The id must be a number'});
-        }
         booksService.deleteBook(bookId);
         res.status(204).send();
-    }catch (error) {
-        res.status(error.statusCode || 500).json({error: error.message});
+    } catch (error) {
+      next(error);
     }
 }
 

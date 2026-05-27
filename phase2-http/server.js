@@ -8,18 +8,18 @@ const server = http.createServer((request, response) => {
     console.log(`📥 ${request.method} ${request.url}`);
 
     // The route will be based on the requested URL.
-    // request.url contains the requested path (e.g. ‘/’, ‘/about’, ‘/users’).
+    // request.url contains the requested path (e.g. "/", "/about", "/users").
 
     if (request.url === "/") {
         // Home page
         response.writeHead(200, {"Content-Type": "text/plain"});
         response.end("Bienvenue sur la page d'accueil !");
     } else if (request.url === "/about") {
-        // ‘About’ page
+        // "About" page
         response.writeHead(200, {"Content-Type": "text/plain"});
         response.end("Je suis un serveur Node.js natif.");
     } else if (request.url === "/users") {
-        // A ‘dummy’ API that returns JSON
+        // A "dummy" API that returns JSON
         response.writeHead(200, {"Content-Type": "application/json"});
 
         // The body of a reply is ALWAYS text.

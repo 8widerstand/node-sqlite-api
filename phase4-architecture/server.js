@@ -9,6 +9,9 @@
 const express = require("express");
 const app = express();
 
+const logger = require("./src/middlewares/logger");
+app.use(logger);
+
 // Global middleware for parsing JSON
 app.use(express.json());
 
@@ -16,10 +19,19 @@ app.use(express.json());
 const booksRoutes = require("./src/routes/booksRoutes");
 const usersRoutes = require("./src/routes/usersRoutes");
 
-// the books routes are “mapped” to the /books prefix.
+// the books routes are "mapped" to the /books prefix.
 // All routes defined in booksRoutes will be accessible under /books.
 app.use("/books", booksRoutes);
 app.use("/users", usersRoutes);
+
+// "Route not found" middleware (AFTER all routes)
+const notFoundHandler = require("./src/middlewares/notFoundHandler");
+app.use(notFoundHandler);
+
+// Error handling middleware (ALWAYS LAST)
+const errorHandler = require("./src/middlewares/errorHandler");
+app.use(errorHandler);
+
 // Starting the server
 const PORT = 3000;
 app.listen(PORT, () => {

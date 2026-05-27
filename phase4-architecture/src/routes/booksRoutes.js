@@ -9,15 +9,16 @@ const express = require("express");
 const router = express.Router();
 
 const booksController = require("../controllers/booksController");
+const validateId = require("../middlewares/validateId");
 
 //  Specific routes BEFORE the configured routes
 router.get("/available/list", booksController.getAvailableBooks);
 
 // Main routes
 router.get("/", booksController.getAllBooks);
-router.get("/:id", booksController.getBookById);
 router.post("/", booksController.createBook);
-router.put("/:id", booksController.updateBook);
-router.delete("/:id", booksController.deleteBook);
+router.get("/:id", validateId, booksController.getBookById);
+router.put("/:id", validateId, booksController.updateBook);
+router.delete("/:id", validateId, booksController.deleteBook);
 
 module.exports = router;
