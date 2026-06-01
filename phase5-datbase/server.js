@@ -10,7 +10,7 @@ const db = require("./src/database/database");
 
 console.log("Database initialised.");
 
-// Une route simple pour tester
+// A simple route to try
 app.get("/", (req, res) => {
     res.json({ message: "Hello, SQLite is ready!" });
 });
