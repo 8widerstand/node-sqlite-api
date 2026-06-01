@@ -47,7 +47,7 @@ const createBook = (bookData) => {
 }
 
 //update a book
-const updateBook = (id,bookData) => {
+const updateBook = (id, bookData) => {
     const existing = booksModel.findById(id);
     if (!existing) {
         const error = new Error("Book not found");
@@ -55,7 +55,7 @@ const updateBook = (id,bookData) => {
         throw error;
     }
 
-    const { title, author, year, available } = bookData;
+    const {title, author, year, available} = bookData;
 
     verifyBook(title, author, year);
     const updatedBook = {
@@ -71,7 +71,7 @@ const updateBook = (id,bookData) => {
 
 // delete a book
 const deleteBook = (id) => {
-    const success = booksModel.deleteBook(id);
+    const success = booksModel.removeBook(id);
     if (!success) {
         const error = new Error("Book not found");
         error.statusCode = 404;

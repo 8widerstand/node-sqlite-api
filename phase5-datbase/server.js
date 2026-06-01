@@ -1,19 +1,19 @@
-// ==========================================
-// server.js: testing the connection to SQLite
-// ==========================================
-
 const express = require("express");
 const app = express();
 
+const logger = require("./src/middlewares/logger");
+app.use(logger);
 
-const db = require("./src/database/database");
+app.use(express.json());
 
-console.log("Database initialised.");
+const booksRoutes = require("./src/routes/booksRoutes");
+app.use("/books", booksRoutes);
 
-// A simple route to try
-app.get("/", (req, res) => {
-    res.json({ message: "Hello, SQLite is ready!" });
-});
+const notFoundHandler = require("./src/middlewares/notFoundHandler");
+app.use(notFoundHandler);
+
+const errorHandler = require("./src/middlewares/errorHandler");
+app.use(errorHandler);
 
 const PORT = 3000;
 app.listen(PORT, () => {

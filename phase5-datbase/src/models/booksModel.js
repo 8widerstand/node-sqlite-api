@@ -1,64 +1,86 @@
 // ==========================================
-// booksModel.js
-// Responsibility: Manage book STORAGE.
+// booksModel.js — SQLite VERSION
+// Responsibility: data access via SQL.
+// The INTERFACE (the exported functions) does NOT change.
+// Only the IMPLEMENTATION changes.
 // ==========================================
 
-let books = [
-    { id: 1, title: "Le Petit Prince", author: "Antoine de Saint-Exupéry", year: 1943, available: true },
-    { id: 2, title: "1984", author: "George Orwell", year: 1949, available: false },
-    { id: 3, title: "Orgueil et Préjugés", author: "Jane Austen", year: 1813, available: true },
-    { id: 4, title: "L'Étranger", author: "Albert Camus", year: 1942, available: false },
-];
+const db = require("../database/database");
 
-let nextId = 5;
+// We PREPARE the statements ONLY ONCE, when the module is loaded.
+// This is faster than preparing them on every call.
+const findAllStmt = db.prepare("SELECT * FROM books");
+const findByIdStmt = db.prepare("SELECT * FROM books WHERE id = ?");
+const findAvailableStmt = db.prepare("SELECT * FROM books WHERE available = 1");
+const insertStmt = db.prepare(`
+  INSERT INTO books (title, author, year, available)
+  VALUES (?, ?, ?, ?)
+`);
+const updateStmt = db.prepare(`
+  UPDATE books
+  SET title = ?, author = ?, year = ?, available = ?
+  WHERE id = ?
+`);
+const deleteStmt = db.prepare("DELETE FROM books WHERE id = ?");
 
-//return all books
+// Helper to convert "available" (INTEGER 0/1) into a JS boolean.
+// SQLite stores 0/1, JavaScript prefers true/false.
+const formatBook = (book) => {
+    if (!book) return null;
+    return {
+        ...book,
+        available: book.available === 1,
+    };
+};
+
+// --- Functions exposed to the service ---
+// Note: EXACTLY the same signatures as before.
+// The service will not notice anything.
+
 const findAll = () => {
-    return books;
+    const books = findAllStmt.all();        // .all() for multiple rows
+    return books.map(formatBook);
 };
 
-// return one book by id
 const findById = (id) => {
-    return books.find(book => book.id === id);
+    const book = findByIdStmt.get(id);       // .get() for a single row
+    return formatBook(book);                  // undefined → null
 };
 
-//return available books
 const findAvailable = () => {
-    return books.find(book => book.available === true);
+    const books = findAvailableStmt.all();
+    return books.map(formatBook);
 };
 
-//create a new book and return them
 const createBook = (bookData) => {
-    const newBook = {
-        id: nextId,
-        ...bookData,
-    };
-    books.push(newBook);
-    nextId++;
-    return newBook;
+    const { title, author, year, available } = bookData;
+
+    // We convert the JS boolean into an INTEGER for SQLite (true → 1, false → 0).
+    const availableInt = available ? 1 : 0;
+
+    // .run() returns { changes, lastInsertRowid }
+    const result = insertStmt.run(title, author, year, availableInt);
+
+    // We return the freshly created book with its id
+    return findById(result.lastInsertRowid);
 };
 
-// replace a book and return the modified book
-const updateBook = (bookData) => {
-    const index = books.findIndex(book => book.id === bookData.id);
-    if (index === -1) return null;
+const updateBook = (id, bookData) => {
+    const { title, author, year, available } = bookData;
+    const availableInt = available ? 1 : 0;
 
-    books[index] = {
-        id: index,
-        ...bookData,
-    };
+    const result = updateStmt.run(title, author, year, availableInt, id);
 
-    return books[index];
-}
+    // If no row was modified, it means the id does not exist
+    if (result.changes === 0) return null;
 
-//delete a book and return true if deleted
-const deleteBook = (id) => {
-    const index = books.findIndex(book => book.id === id);
-    if (index === -1) return false;
+    return findById(id);
+};
 
-    books.splice(index, 1);
-    return true;
-}
+const removeBook = (id) => {
+    const result = deleteStmt.run(id);
+    return result.changes > 0;   // true if something was deleted
+};
 
 module.exports = {
     findAll,
@@ -66,5 +88,5 @@ module.exports = {
     findAvailable,
     createBook,
     updateBook,
-    deleteBook,
-}
+    removeBook,
+};
