@@ -9,20 +9,20 @@ const getAdultsUser = () => {
 };
 
 const getUserById = (id) => {
-    const user = usersModel.findOne(id);
+    const user = usersModel.findById(id);
     if (!user) {
         const error = new Error(`User with id ${id} not found`);
-        error.type = 404;
+        error.statusCode = 404;
         throw error;
     }
     return user;
 }
 
 const updateUser = (id, user) => {
-    const index = usersModel.findOne(id);
+    const index = usersModel.findById(id);
     if (!index) {
         const error = new Error(`User with id ${id} not found`);
-        error.type = 404;
+        error.statusCode = 404;
         throw error;
     }
     const {name, email, age} = user;
@@ -46,6 +46,14 @@ const createUser = (user) => {
         email,
         age
     }
+    //Check if the email is UNIQUE
+    const existing = usersModel.findByEmail(email);
+    if (existing) {
+        const error = new Error("Email already in use");
+        error.statusCode = 409;
+        throw error;
+    }
+
     return usersModel.createUser(updatedUser);
 };
 
@@ -53,7 +61,7 @@ const deleteUser = (id) => {
     const success = usersModel.deleteUser(id);
     if (!success) {
         const error = new Error(`User with id ${id} not found`);
-        error.type = 404;
+        error.statusCode = 404;
         throw error;
     }
 };
@@ -61,28 +69,37 @@ const deleteUser = (id) => {
 const verifyUser = (name, email, age) => {
     if (!name || !email) {
         const error = new Error(`name and email are required`);
-        error.type = 400;
+        error.statusCode = 400;
         throw error;
     }
 
-    if (!email.includes("@")){
+    if (!email.includes("@")) {
         const error = new Error(`email is invalid`);
-        error.type = 400;
+        error.statusCode = 400;
         throw error;
     }
 
-    if (isNaN(age) || age < 0) {
+    if (age !== undefined && age < 0) {
         const error = new Error(`age should be a positive integer`);
-        error.type = 400;
+        error.statusCode = 400;
         throw error;
     }
 
 };
+const getUserByEmail = (email) => {
+    const existing = usersModel.findByEmail(email);
+    if (existing) {
+        const error = new Error("Email already in use");
+        error.statusCode = 409;
+        throw error;
+    }
+}
 
 module.exports = {
     getAllUsers,
     getAdultsUser,
     getUserById,
+    getUserByEmail,
     updateUser,
     createUser,
     deleteUser,

@@ -39,6 +39,7 @@ db.exec(`
     )
 `);
 
+// Set a seed for the books
 const bookCount = db.prepare("SELECT COUNT(*) AS count FROM books").get().count;
 
 if (bookCount === 0) {
@@ -54,14 +55,40 @@ if (bookCount === 0) {
     });
 
     insertMany([
-        { title: "Le Petit Prince", author: "Antoine de Saint-Exupéry", year: 1943, available: 1 },
-        { title: "1984", author: "George Orwell", year: 1949, available: 0 },
-        { title: "Orgueil et Préjugés", author: "Jane Austen", year: 1813, available: 1 },
-        { title: "L'Étranger", author: "Albert Camus", year: 1942, available: 0 },
+        {title: "Le Petit Prince", author: "Antoine de Saint-Exupéry", year: 1943, available: 1},
+        {title: "1984", author: "George Orwell", year: 1949, available: 0},
+        {title: "Orgueil et Préjugés", author: "Jane Austen", year: 1813, available: 1},
+        {title: "L'Étranger", author: "Albert Camus", year: 1942, available: 0},
     ]);
 
     console.log("✅ Données initiales insérées.");
 }
+
+// Set a seed for the users
+const userCount = db.prepare("SELECT COUNT(*) AS count FROM users").get().count;
+
+if (userCount === 0) {
+    const insertSeed = db.prepare(`
+        INSERT INTO users (name, email, age)
+        VALUES (?, ?, ?)
+    `);
+
+    const insertMany = db.transaction((users) => {
+        for (const user of users) {
+            insertSeed.run(user.name, user.email, user.age);
+        }
+    });
+
+    insertMany([
+        {name: "Alice Dupont", email: "alice@example.com", age: 25},
+        {name: "Bob Martin", email: "bob@example.com", age: 18},
+        {name: "Charlie Leroy", email: "charlie@example.com", age: 35},
+        {name: "Diana Rose", email: "diana@example.com", age: 15},
+    ]);
+
+    console.log("✅ Données utilisateurs initiales insérées.");
+}
+
 
 //  Export the db object so that it can be used it in the models.
 module.exports = db;

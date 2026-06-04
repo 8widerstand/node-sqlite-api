@@ -1,62 +1,74 @@
-const users = [
-    {id: 1, name: "Alice Dupont", email: "alice@email.com", age: 25},
-    {id: 2, name: "Bob Martin", email: "bob@email.com", age: 18},
-    {id: 3, name: "Charlie Leroy", email: "charlie@email.com", age: 29},
-    {id: 4, name: "Diana Lefevre", email: "diana@email.com", age: 145},
-    {id: 5, name: "Eve Moreau", email: "eve@email.com", age: 26}
-];
-let nextIndex = 6;
+const db = require('../database/database');
+
+const findAllStmt = db.prepare("SELECT * FROM users");
+const findByIdStmt = db.prepare("SELECT * FROM users WHERE id = ?");
+const findByEmailStmt = db.prepare("SELECT * FROM users WHERE email = ?");
+const findAdultStmt = db.prepare("SELECT * FROM users WHERE age >= 18");
+const insertStmt = db.prepare(`
+    INSERT INTO users (name, email, age)
+    VALUES (?, ?, ?)
+`);
+const updateStmt = db.prepare(`
+    UPDATE users
+    SET name  = ?,
+        email = ?,
+        age   = ?
+    WHERE id = ?
+`);
+
+const deleteStmt = db.prepare(`DELETE FROM users WHERE id = ?`)
+
 // get all users
 const findAll = () => {
-    return users;
+    return findAllStmt.all();
 };
 
 // get a user by id
 const findOne = (userId) => {
-    return users.find((user) => user.id === userId);
+    const result = findByIdStmt.get(userId);
+    if (!result) return null;
+    return result;
 };
+
+//get a user by email
+const findByEmail = (email) => {
+    const result = findByEmailStmt.get(email);
+    if (!result) return null;
+    return result;
+}
 
 //get adult users
 const findAdultUsers = () => {
-    return users.filter(user => user.age >= 18);
+    return findAdultStmt.all();
 }
 
 // create a user
-const createUser = (body) => {
-    const newUser = {
-        id: nextIndex,
-        ...body
-    }
-    users.push(newUser);
-    nextIndex++;
-
-    return newUser;
+const createUser = (userData) => {
+    const {name, email, age} = userData;
+    const newUser = insertStmt.run(name, email, age);
+    return findOne(newUser.lastInsertRowid);
 };
 
 //update a user
-const updateUser = (userData) => {
-    const index = users.findIndex((user) => user.id === userData.id);
-    if (index === -1) return null;
-
-    return users[index] = {
-        id: nextIndex,
-        ...userData
-    };
+const updateUser = (id, userData) => {
+    const {name, email, age} = userData;
+    const updatedUser = updateStmt.run(id, {name, email, age,});
+    if (updatedUser.changes === 0) return null;
+    return findOne(id);
 };
 
 //delete a user
 const deleteUser = (userId) => {
-    const index = users.findIndex((user) => user.id === userId);
-    if (index === -1) return false;
-    users.splice(index, 1);
-    return true
+    const result = deleteStmt.run(userId);
+    return result.changes > 0;
 };
 
 module.exports = {
     findAll,
-    findOne,
+    findById: findOne,
     findAdultUsers,
     createUser,
+    findByEmail,
     updateUser,
     deleteUser,
 }

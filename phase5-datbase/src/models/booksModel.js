@@ -7,7 +7,7 @@
 
 const db = require("../database/database");
 
-// We PREPARE the statements ONLY ONCE, when the module is loaded.
+// PREPARE the statements ONLY ONCE, when the module is loaded.
 // This is faster than preparing them on every call.
 const findAllStmt = db.prepare("SELECT * FROM books");
 const findByIdStmt = db.prepare("SELECT * FROM books WHERE id = ?");
