@@ -6,7 +6,9 @@ app.use(logger);
 
 app.use(express.json());
 
+const usersRoutes = require("./src/routes/usersRoutes");
 const booksRoutes = require("./src/routes/booksRoutes");
+app.use("/users", usersRoutes);
 app.use("/books", booksRoutes);
 
 const notFoundHandler = require("./src/middlewares/notFoundHandler");

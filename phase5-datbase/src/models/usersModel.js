@@ -16,7 +16,9 @@ const updateStmt = db.prepare(`
     WHERE id = ?
 `);
 
-const deleteStmt = db.prepare(`DELETE FROM users WHERE id = ?`)
+const deleteStmt = db.prepare(`DELETE
+                               FROM users
+                               WHERE id = ?`)
 
 // get all users
 const findAll = () => {
@@ -52,7 +54,7 @@ const createUser = (userData) => {
 //update a user
 const updateUser = (id, userData) => {
     const {name, email, age} = userData;
-    const updatedUser = updateStmt.run(id, {name, email, age,});
+    const updatedUser = updateStmt.run(name, email, age, id);
     if (updatedUser.changes === 0) return null;
     return findOne(id);
 };

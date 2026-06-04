@@ -29,13 +29,12 @@ const updateUser = (id, user) => {
     verifyUser(name, email, age);
 
     const updatedUser = {
-        id: index.id,
         name,
         email,
         age
     };
 
-    return usersModel.updateUser(updatedUser);
+    return usersModel.updateUser(id, updatedUser);
 };
 
 const createUser = (user) => {
