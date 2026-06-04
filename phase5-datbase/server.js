@@ -8,8 +8,10 @@ app.use(express.json());
 
 const usersRoutes = require("./src/routes/usersRoutes");
 const booksRoutes = require("./src/routes/booksRoutes");
+const loansRoutes = require("./src/routes/loansRoutes");
 app.use("/users", usersRoutes);
 app.use("/books", booksRoutes);
+app.use("/loans", loansRoutes);
 
 const notFoundHandler = require("./src/middlewares/notFoundHandler");
 app.use(notFoundHandler);
