@@ -10,7 +10,7 @@ const getAllLoans = (req, res, next) => {
 
 const getLoanById = (req, res, next) => {
     try {
-        res.json(loansService.getLoanById(req.params.id));
+        res.json(loansService.getLoanById(parseInt(req.params.id)));
     } catch (error) {
         next(error);
     }

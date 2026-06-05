@@ -31,8 +31,13 @@ const getAvailableBooks = () => {
     return booksModel.findAvailable();
 };
 
-//create a book (with validation)
+//get popular loans
+const getPopularBooks = () => {
+    return booksModel.findPopular();
+};
 
+
+//create a book (with validation)
 const createBook = (bookData) => {
     const {title, author, year, available} = bookData;
     verifyBook(title, author, year);
@@ -97,6 +102,7 @@ module.exports = {
     getAllBooks,
     getBookById,
     getAvailableBooks,
+    getPopularBooks,
     createBook,
     updateBook,
     deleteBook,

@@ -36,9 +36,19 @@ const getAvailableBooks = (req, res, next) => {
         const availableBooks = booksService.getAvailableBooks();
         res.json(availableBooks);
     } catch (error) {
-      next(error);
+        next(error);
     }
-}
+};
+
+// GET/books/popular
+const getPopularBooks = (req, res, next) => {
+    try {
+        const popularBooks = booksService.getPopularBooks();
+        res.json(popularBooks);
+    } catch (error) {
+        next(error);
+    }
+};
 
 // POST /books
 const createBook = (req, res, next) => {
@@ -59,7 +69,7 @@ const updateBook = (req, res, next) => {
         const book = booksService.updateBook(bookId, bookData);
         res.status(201).json(book);
     } catch (error) {
-       next(error);
+        next(error);
     }
 }
 
@@ -70,7 +80,7 @@ const deleteBook = (req, res, next) => {
         booksService.deleteBook(bookId);
         res.status(204).send();
     } catch (error) {
-      next(error);
+        next(error);
     }
 }
 
@@ -78,6 +88,7 @@ module.exports = {
     getAllBooks,
     getBookById,
     getAvailableBooks,
+    getPopularBooks,
     createBook,
     updateBook,
     deleteBook,

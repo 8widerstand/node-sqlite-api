@@ -14,6 +14,7 @@ const auth = require("../middlewares/auth");
 
 //  Specific routes BEFORE the configured routes
 router.get("/available/list", booksController.getAvailableBooks);
+router.get("/popular", booksController.getPopularBooks);
 
 // Main routes
 router.get("/", booksController.getAllBooks);

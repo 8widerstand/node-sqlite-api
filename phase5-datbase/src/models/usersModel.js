@@ -26,7 +26,7 @@ const findAll = () => {
 };
 
 // get a user by id
-const findOne = (userId) => {
+const findById = (userId) => {
     const result = findByIdStmt.get(userId);
     if (!result) return null;
     return result;
@@ -48,7 +48,7 @@ const findAdultUsers = () => {
 const createUser = (userData) => {
     const {name, email, age} = userData;
     const newUser = insertStmt.run(name, email, age);
-    return findOne(newUser.lastInsertRowid);
+    return findById(newUser.lastInsertRowid);
 };
 
 //update a user
@@ -56,7 +56,7 @@ const updateUser = (id, userData) => {
     const {name, email, age} = userData;
     const updatedUser = updateStmt.run(name, email, age, id);
     if (updatedUser.changes === 0) return null;
-    return findOne(id);
+    return findById(id);
 };
 
 //delete a user
@@ -67,7 +67,7 @@ const deleteUser = (userId) => {
 
 module.exports = {
     findAll,
-    findById: findOne,
+    findById,
     findAdultUsers,
     createUser,
     findByEmail,

@@ -28,6 +28,16 @@ const getUserById = (req, res) => {
     }
 };
 
+const displayUserStats = (req, res, next) => {
+    try {
+        const id = parseInt(req.params.id);
+        const userStats = userService.displayUserStats(id);
+        res.json(userStats);
+    } catch (error) {
+        next(error);
+    }
+}
+
 const updateUser = (req, res) => {
     try {
         const id = parseInt(req.params.id);
@@ -63,6 +73,7 @@ module.exports = {
     getAllUsers,
     getAdultUsers,
     getUserById,
+    displayUserStats,
     updateUser,
     createUser,
     deleteUser,

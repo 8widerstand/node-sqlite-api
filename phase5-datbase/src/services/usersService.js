@@ -1,4 +1,5 @@
 const usersModel = require("../models/usersModel");
+const loansModel = require("../models/loansModel");
 
 const getAllUsers = () => {
     return usersModel.findAll();
@@ -16,6 +17,17 @@ const getUserById = (id) => {
         throw error;
     }
     return user;
+}
+
+const displayUserStats = (id) => {
+    const userData = getUserById(id);
+    const userStats = loansModel.displayStats(id,userData);
+    if (!userStats) {
+        const error = new Error(`User with id ${id} not found`);
+        error.statusCode = 404;
+        throw error;
+    }
+    return userStats;
 }
 
 const updateUser = (id, user) => {
@@ -99,6 +111,7 @@ module.exports = {
     getAdultsUser,
     getUserById,
     getUserByEmail,
+    displayUserStats,
     updateUser,
     createUser,
     deleteUser,

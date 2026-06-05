@@ -9,6 +9,7 @@ router.get("/adults/list", usersController.getAdultUsers)
 router.get("/", usersController.getAllUsers);
 router.post("/",auth, usersController.createUser);
 
+router.get("/:id/stats", usersController.displayUserStats);
 router.get("/:id", validateId, usersController.getUserById);
 router.put("/:id", validateId,auth, usersController.updateUser);
 router.delete("/:id", validateId,auth, usersController.deleteUser);

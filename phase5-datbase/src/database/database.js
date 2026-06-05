@@ -50,8 +50,8 @@ db.exec(`
         book_id     INTEGER NOT NULL,
         borrow_date TEXT    NOT NULL,
         return_date TEXT,
-        FOREIGN KEY (user_id) REFERENCES users (id),
-        FOREIGN KEY (book_id) REFERENCES books (id)
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (book_id) REFERENCES books(id)
     )
 `)
 

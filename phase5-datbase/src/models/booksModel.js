@@ -12,15 +12,28 @@ const db = require("../database/database");
 const findAllStmt = db.prepare("SELECT * FROM books");
 const findByIdStmt = db.prepare("SELECT * FROM books WHERE id = ?");
 const findAvailableStmt = db.prepare("SELECT * FROM books WHERE available = 1");
+
+const findPopularStmt = db.prepare(`
+    SELECT books.id, books.title, COUNT(loans.id) AS borrow_count
+    FROM books
+             LEFT JOIN loans ON books.id = loans.book_id
+    GROUP BY books.id
+    ORDER BY borrow_count DESC`);
+
 const insertStmt = db.prepare(`
-  INSERT INTO books (title, author, year, available)
-  VALUES (?, ?, ?, ?)
+    INSERT INTO books (title, author, year, available)
+    VALUES (?, ?, ?, ?)
 `);
+
 const updateStmt = db.prepare(`
-  UPDATE books
-  SET title = ?, author = ?, year = ?, available = ?
-  WHERE id = ?
+    UPDATE books
+    SET title     = ?,
+        author    = ?,
+        year      = ?,
+        available = ?
+    WHERE id = ?
 `);
+
 const deleteStmt = db.prepare("DELETE FROM books WHERE id = ?");
 
 // Helper to convert "available" (INTEGER 0/1) into a JS boolean.
@@ -52,8 +65,17 @@ const findAvailable = () => {
     return books.map(formatBook);
 };
 
+const findPopular = () => {
+    const books = findPopularStmt.all();
+    return books.map((book) => ({
+        id: book.id,
+        title: book.title,
+        borrow_count: book.borrow_count,
+    }));
+};
+
 const createBook = (bookData) => {
-    const { title, author, year, available } = bookData;
+    const {title, author, year, available} = bookData;
 
     // We convert the JS boolean into an INTEGER for SQLite (true → 1, false → 0).
     const availableInt = available ? 1 : 0;
@@ -66,7 +88,7 @@ const createBook = (bookData) => {
 };
 
 const updateBook = (id, bookData) => {
-    const { title, author, year, available } = bookData;
+    const {title, author, year, available} = bookData;
     const availableInt = available ? 1 : 0;
 
     const result = updateStmt.run(title, author, year, availableInt, id);
@@ -86,6 +108,7 @@ module.exports = {
     findAll,
     findById,
     findAvailable,
+    findPopular,
     createBook,
     updateBook,
     removeBook,
