@@ -30,12 +30,6 @@ const getActiveLoans = () => loansModel.findActive();
 const createLoan = (loanData) => {
     const { user_id, book_id, borrow_date, return_date } = loanData;
 
-    if (!user_id || !book_id || !borrow_date) {
-        const error = new Error("user_id, book_id and borrow_date are required");
-        error.statusCode = 400;
-        throw error;
-    }
-
     const user = usersModel.findById(user_id);
     if (!user) {
         const error = new Error(`User with id ${user_id} does not exist`);
@@ -54,13 +48,8 @@ const createLoan = (loanData) => {
 };
 
 const returnLoan = (id, returnDate) => {
-    if (!returnDate) {
-        const error = new Error("return_date is required");
-        error.statusCode = 400;
-        throw error;
-    }
-
     const updated = loansModel.markReturned(id, returnDate);
+
     if (!updated) {
         const error = new Error(`Loan with id ${id} not found`);
         error.statusCode = 404;

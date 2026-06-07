@@ -40,7 +40,6 @@ const getPopularBooks = () => {
 //create a book (with validation)
 const createBook = (bookData) => {
     const {title, author, year, available} = bookData;
-    verifyBook(title, author, year);
 
     const newBook = {
         title,
@@ -62,7 +61,6 @@ const updateBook = (id, bookData) => {
 
     const {title, author, year, available} = bookData;
 
-    verifyBook(title, author, year);
     const updatedBook = {
         id: existing.id,
         title,
@@ -83,20 +81,6 @@ const deleteBook = (id) => {
         throw error;
     }
 };
-
-function verifyBook(title, author, year) {
-    if (isNaN(year) || year === undefined && year || 0) {
-        const error = new Error("The field 'year' must be a positive number");
-        error.status = 400;
-        throw error;
-    }
-
-    if (!title || !author) {
-        const error = new Error("The field 'title' and 'author' are required ");
-        error.status = 400;
-        throw error;
-    }
-}
 
 module.exports = {
     getAllBooks,

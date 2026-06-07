@@ -1,5 +1,5 @@
-const usersModel = require("../models/usersModel");
-const loansModel = require("../models/loansModel");
+const usersModel = require("../phase6-validation-pro-using-zod/src/models/usersModel");
+const loansModel = require("../phase6-validation-pro-using-zod/src/models/loansModel");
 
 const getAllUsers = () => {
     return usersModel.findAll();
@@ -21,7 +21,7 @@ const getUserById = (id) => {
 
 const displayUserStats = (id) => {
     const userData = getUserById(id);
-    const userStats = loansModel.displayStats(id,userData);
+    const userStats = loansModel.displayStats(id, userData);
     if (!userStats) {
         const error = new Error(`User with id ${id} not found`);
         error.statusCode = 404;
@@ -38,7 +38,6 @@ const updateUser = (id, user) => {
         throw error;
     }
     const {name, email, age} = user;
-    verifyUser(name, email, age);
 
     const updatedUser = {
         name,
@@ -51,7 +50,6 @@ const updateUser = (id, user) => {
 
 const createUser = (user) => {
     const {name, email, age} = user;
-    verifyUser(name, email, age);
     const updatedUser = {
         name,
         email,
@@ -77,26 +75,6 @@ const deleteUser = (id) => {
     }
 };
 
-const verifyUser = (name, email, age) => {
-    if (!name || !email) {
-        const error = new Error(`name and email are required`);
-        error.statusCode = 400;
-        throw error;
-    }
-
-    if (!email.includes("@")) {
-        const error = new Error(`email is invalid`);
-        error.statusCode = 400;
-        throw error;
-    }
-
-    if (age !== undefined && age < 0) {
-        const error = new Error(`age should be a positive integer`);
-        error.statusCode = 400;
-        throw error;
-    }
-
-};
 const getUserByEmail = (email) => {
     const existing = usersModel.findByEmail(email);
     if (existing) {
