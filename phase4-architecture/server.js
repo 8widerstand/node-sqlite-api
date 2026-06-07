@@ -36,7 +36,7 @@ app.use(errorHandler);
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
-    console.log("\nRoutes disponibles :");
+    console.log("\nAvailable Routes  :");
     console.log("  GET    /books                  → all books ");
     console.log("  GET    /books/:id              → on book per id");
     console.log("  GET    /books/available/list   → available books");

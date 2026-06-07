@@ -12,6 +12,7 @@ const booksController = require("../controllers/booksController");
 const validateId = require("../middlewares/validateId");
 const auth = require("../middlewares/auth");
 const validate = require("../middlewares/validate");
+const strictLimiter = require("../middlewares/strictLimiter");
 const {createBookSchema, updateBookSchema} = require("../schemas/bookSchemas");
 
 //  Specific routes BEFORE the configured routes
@@ -24,6 +25,6 @@ router.post("/", auth, validate(createBookSchema), booksController.createBook);
 
 router.get("/:id", validateId, booksController.getBookById);
 router.put("/:id", validateId, auth, validate(updateBookSchema), booksController.updateBook);
-router.delete("/:id", validateId, auth, booksController.deleteBook);
+router.delete("/:id", validateId, auth, strictLimiter, booksController.deleteBook);
 
 module.exports = router;
