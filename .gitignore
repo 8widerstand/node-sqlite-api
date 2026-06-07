@@ -4,3 +4,15 @@ node_modules/
 .DS_Store
 /.idea/vcs.xml
 /.idea/workspace.xml
+/.idea/dataSources/data_sources_history.xml
+/.idea/dataSources.xml
+/.idea/dataSources/e7dda326-66ba-47cc-89cf-d6f6f1f1bd4b.xml
+/.idea/dataSources.local.xml
+/identifier.sqlite
+/.idea/dataSources/e7dda326-66ba-47cc-89cf-d6f6f1f1bd4b/storage_v2/_src_/schema/main.uQUzAA.meta
+/.idea/sqldialects.xml
+/.idea/data_source_mapping.xml
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
