@@ -53,7 +53,9 @@ app.use(logger);
 // JSON parser WITH size limit (security against JSON bombs)
 app.use(express.json({ limit: "10kb" }));
 
-
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./src/config/swagger");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // ==========================================
 // ROUTES
 
