@@ -1,34 +1,34 @@
-const {z} = require("zod");
+const { z } = require("zod");
+
+// Regex for validating a date with format YYYY-MM-DD
+const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 const createLoanSchema = z.object({
     user_id: z
-        .number({message: "Id must be a number"})
-        .int("Id must be a integer")
-        .positive( "Id must be a positive integer")
-    ,
+        .number({ message: "user_id must be a number" })
+        .int("user_id must be an integer")
+        .positive("user_id must be positive"),
+
     book_id: z
-        .number({message: "Id must be a number"})
-        .int("Id must be a integer")
-        .min(1, "Id must be a positive integer")
-    ,
+        .number({ message: "book_id must be a number" })
+        .int("book_id must be an integer")
+        .positive("book_id must be positive"),
+
     borrow_date: z
-        .string({message: "borrow date must be a string"})
-        .min(10, "Borrow date is required")
-        .max(new Date().getFullYear(), "borrow date cannot be in the future")
-    ,
+        .string({ message: "borrow_date must be a string" })
+        .regex(dateRegex, "borrow_date must be in format YYYY-MM-DD"),
+
     return_date: z
-        .string({message: "return date must be a string"})
-        .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in format YYYY-MM-DD")
-    ,
+        .string({ message: "return_date must be a string" })
+        .regex(dateRegex, "return_date must be in format YYYY-MM-DD")
+        .optional(),
 });
 
 const returnLoanSchema = z.object({
     return_date: z
-        .string({message: "return date must be a string"})
-        .min(10, "return date is required")
-        .max(new Date().getFullYear(), "return date cannot be in the future")
-    ,
-})
+        .string({ message: "return_date must be a string" })
+        .regex(dateRegex, "return_date must be in format YYYY-MM-DD"),
+});
 
 module.exports = {
     createLoanSchema,
